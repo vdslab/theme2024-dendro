@@ -1,6 +1,7 @@
 import { geoMercator, geoPath } from "d3";
 import { useState } from "react";
 import useSWR from "swr";
+import { prefectureCenter } from "../../constants/prefecture";
 import { ZoomableSVG } from "../common";
 import { BaseMap } from "./BaseMap";
 import { SelectedPrefecture } from "./SelectedPrefecture";
@@ -16,20 +17,24 @@ export const Map = () => {
     suspense: true,
   });
   const [selectedPrefecture, setSelectedPrefecture] = useState(null);
-  const width = 1000;
-  const height = 800;
+  const width = 900;
+  const height = 840;
 
   const projection = geoMercator().fitExtent(
     [
       [0, 0],
-      [width, height * 0.9],
+      [width, height],
     ],
     data
   );
   const pathGenerator = geoPath().projection(projection);
 
   return (
-    <ZoomableSVG width={width} height={height}>
+    <ZoomableSVG
+      width={width}
+      height={height}
+      style={{ border: "1px solid lightgray" }}
+    >
       <BaseMap
         features={data.features}
         pathGenerator={pathGenerator}
@@ -41,6 +46,10 @@ export const Map = () => {
         pathGenerator={pathGenerator}
         setSelectedPrefecture={setSelectedPrefecture}
       />
+      {Object.entries(prefectureCenter).map(([key, center]) => {
+        const [cx, cy] = projection([center.x, center.y]);
+        return <circle key={key} cx={cx} cy={cy} r={2} fill="red" />;
+      })}
     </ZoomableSVG>
   );
 };

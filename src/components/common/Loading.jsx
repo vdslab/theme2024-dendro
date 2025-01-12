@@ -1,7 +1,6 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
 
 export const Loading = () => {
-  console.log("Loading");
   return (
     <Box
       display="flex"

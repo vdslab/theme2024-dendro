@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
 
@@ -29,9 +29,15 @@ export const ZoomableSVG = ({ children, width, height, style }) => {
       <svg ref={svgRef} width={width} height={height} style={style}>
         <g transform={`translate(${x},${y})scale(${k})`}>{children}</g>
       </svg>
-      <Button variant="outlined" onClick={reset}>
-        SVG Reset
-      </Button>
+      <button
+        onClick={reset}
+        style={{
+          position: "absolute",
+          cursor: "pointer",
+        }}
+      >
+        ズームをリセット
+      </button>
     </Box>
   );
 };
