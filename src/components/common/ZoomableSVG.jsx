@@ -25,11 +25,13 @@ export const ZoomableSVG = ({ children, width, height, style }) => {
   };
 
   return (
-    <Box>
+    <Box display="flex" flexDirection="column" alignItems="flex-start">
       <svg ref={svgRef} width={width} height={height} style={style}>
         <g transform={`translate(${x},${y})scale(${k})`}>{children}</g>
       </svg>
-      <Button onClick={reset}>Reset</Button>
+      <Button variant="outlined" onClick={reset}>
+        SVG Reset
+      </Button>
     </Box>
   );
 };

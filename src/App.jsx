@@ -1,18 +1,16 @@
-import { useEffect, useState } from "react";
+import { Box } from "@mui/material";
+import { Suspense } from "react";
 import { Map } from "./components/charts/Map";
+import { Header, Loading } from "./components/common";
+import { Provider } from "./provider/Provider";
 
-export const App = () => {
-  const [geojson, setGeojson] = useState(null);
-
-  useEffect(() => {
-    fetch("/data/prefectures.geojson")
-      .then((response) => response.json())
-      .then((data) => setGeojson(data));
-  }, []);
-
-  if (!geojson) {
-    return <div>Loading...</div>;
-  }
-
-  return <Map data={geojson} />;
-};
+export const App = () => (
+  <Provider>
+    <Box height="100vh">
+      <Header />
+      <Suspense fallback={<Loading />}>
+        <Map />
+      </Suspense>
+    </Box>
+  </Provider>
+);

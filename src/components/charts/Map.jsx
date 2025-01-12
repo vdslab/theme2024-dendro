@@ -1,10 +1,20 @@
 import { geoMercator, geoPath } from "d3";
 import { useState } from "react";
-import { ZoomableSVG } from "../common/ZoomableSVG";
+import useSWR from "swr";
+import { ZoomableSVG } from "../common";
 import { BaseMap } from "./BaseMap";
 import { SelectedPrefecture } from "./SelectedPrefecture";
 
-export const Map = ({ data }) => {
+const fetcher = async (url) => {
+  const response = await fetch(url);
+  return response.json();
+};
+
+export const Map = () => {
+  const { data } = useSWR("data/prefectures.geojson", fetcher, {
+    revalidateOnFocus: false,
+    suspense: true,
+  });
   const [selectedPrefecture, setSelectedPrefecture] = useState(null);
   const width = 1000;
   const height = 800;
@@ -19,11 +29,7 @@ export const Map = ({ data }) => {
   const pathGenerator = geoPath().projection(projection);
 
   return (
-    <ZoomableSVG
-      width={width}
-      height={height}
-      style={{ border: "1px solid #ccc" }}
-    >
+    <ZoomableSVG width={width} height={height}>
       <BaseMap
         features={data.features}
         pathGenerator={pathGenerator}
