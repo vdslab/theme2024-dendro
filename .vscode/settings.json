@@ -1,0 +1,10 @@
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always",
+    /* import文の 自動追加 */
+    "source.addMissingImports": "always",
+    /* import文の 自動未使用import削除 & 自動アルファベット順ソート */
+    "source.organizeImports": "always"
+  },
+}

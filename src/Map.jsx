@@ -1,5 +1,5 @@
+import { geoMercator, geoPath } from "d3-geo";
 import { useState } from "react";
-import { geoPath, geoMercator } from "d3-geo";
 
 export const Map = ({ data }) => {
   const [hoveredPrefecture, setHoveredPrefecture] = useState(null);
