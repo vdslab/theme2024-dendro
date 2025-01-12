@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Map } from "./Map";
+import { Map } from "./components/charts/Map";
 
 export const App = () => {
   const [geojson, setGeojson] = useState(null);
