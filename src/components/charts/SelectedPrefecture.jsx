@@ -7,7 +7,7 @@ export const SelectedPrefecture = ({
   setSelectedPrefecture,
 }) => {
   const feature = features.find(
-    (feature) => feature.properties.name === selectedPrefecture
+    (feature) => feature.properties.pref === selectedPrefecture
   );
   return (
     <>

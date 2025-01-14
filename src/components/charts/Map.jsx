@@ -1,21 +1,19 @@
 import { geoMercator, geoPath } from "d3";
 import { useState } from "react";
-import useSWR from "swr";
 import { prefectureCenter } from "../../constants/prefecture";
+import { isNotNullOrUndefined } from "../../functions/nullOrUndefined";
+import { useDataFetch } from "../../hooks/useDataFetch";
 import { ZoomableSVG } from "../common";
+import { FlowMap } from "../flowMap/FlowMap";
 import { BaseMap } from "./BaseMap";
 import { SelectedPrefecture } from "./SelectedPrefecture";
 
-const fetcher = async (url) => {
-  const response = await fetch(url);
-  return response.json();
-};
-
-export const Map = () => {
-  const { data } = useSWR("data/prefectures.geojson", fetcher, {
+export const Map = ({ flowData }) => {
+  const { data: geojson } = useDataFetch("data/prefectures.geojson", {
     revalidateOnFocus: false,
     suspense: true,
   });
+
   const [selectedPrefecture, setSelectedPrefecture] = useState(null);
   const width = 900;
   const height = 840;
@@ -25,7 +23,7 @@ export const Map = () => {
       [0, 0],
       [width, height],
     ],
-    data
+    geojson
   );
   const pathGenerator = geoPath().projection(projection);
 
@@ -36,20 +34,24 @@ export const Map = () => {
       style={{ border: "1px solid lightgray" }}
     >
       <BaseMap
-        features={data.features}
+        features={geojson.features}
         pathGenerator={pathGenerator}
         setSelectedPrefecture={setSelectedPrefecture}
       />
       <SelectedPrefecture
-        features={data.features}
+        features={geojson.features}
         selectedPrefecture={selectedPrefecture}
         pathGenerator={pathGenerator}
         setSelectedPrefecture={setSelectedPrefecture}
       />
-      {Object.entries(prefectureCenter).map(([key, center]) => {
-        const [cx, cy] = projection([center.x, center.y]);
-        return <circle key={key} cx={cx} cy={cy} r={2} fill="red" />;
-      })}
+      {isNotNullOrUndefined(selectedPrefecture) && (
+        <FlowMap
+          flowData={flowData[2000]}
+          points={prefectureCenter}
+          start={selectedPrefecture}
+          projection={projection}
+        />
+      )}
     </ZoomableSVG>
   );
 };

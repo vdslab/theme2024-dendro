@@ -48,6 +48,10 @@ export const prefectureIdToName = {
   47: "沖縄県",
 };
 
+export const isInPrefectureId = (id) => {
+  return Object.keys(prefectureIdToName).some((key) => key === id);
+};
+
 export const prefectureNameToId = Object.entries(prefectureIdToName).reduce(
   (acc, [id, name]) => {
     acc[name] = id;
