@@ -1,6 +1,7 @@
 import { geoMercator, geoPath } from "d3";
-import { useState } from "react";
+import { useContext, useRef } from "react";
 import { prefectureCenter } from "../../constants/prefecture";
+import { DataContext } from "../../context/DataContext/DataContext";
 import { isNotNullOrUndefined } from "../../functions/nullOrUndefined";
 import { useDataFetch } from "../../hooks/useDataFetch";
 import { ZoomableSVG } from "../common";
@@ -8,27 +9,39 @@ import { FlowMap } from "../flowMap/FlowMap";
 import { BaseMap } from "./BaseMap";
 import { SelectedPrefecture } from "./SelectedPrefecture";
 
-export const Map = ({ flowData }) => {
+export const Map = () => {
+  const { flowOfPeople, setSelectedPrefecture } = useContext(DataContext);
+  const ZoomableSVGRef = useRef(null);
   const { data: geojson } = useDataFetch("data/prefectures.geojson", {
     revalidateOnFocus: false,
     suspense: true,
   });
 
-  const [selectedPrefecture, setSelectedPrefecture] = useState(null);
   const width = 900;
   const height = 840;
 
   const projection = geoMercator().fitExtent(
     [
-      [0, 0],
-      [width, height],
+      [-100, 0],
+      [width + 100, height + 70],
     ],
     geojson
   );
   const pathGenerator = geoPath().projection(projection);
+  const handleClick = (prefectureId) => {
+    setSelectedPrefecture(prefectureId);
+    const [x, y] = projection([
+      prefectureCenter[prefectureId].x,
+      prefectureCenter[prefectureId].y,
+    ]);
+    if (isNotNullOrUndefined(ZoomableSVGRef.current)) {
+      ZoomableSVGRef.current.zoomTo(x, y, 3);
+    }
+  };
 
   return (
     <ZoomableSVG
+      ref={ZoomableSVGRef}
       width={width}
       height={height}
       style={{ border: "1px solid lightgray" }}
@@ -36,22 +49,17 @@ export const Map = ({ flowData }) => {
       <BaseMap
         features={geojson.features}
         pathGenerator={pathGenerator}
-        setSelectedPrefecture={setSelectedPrefecture}
+        handleClick={handleClick}
       />
       <SelectedPrefecture
         features={geojson.features}
-        selectedPrefecture={selectedPrefecture}
         pathGenerator={pathGenerator}
-        setSelectedPrefecture={setSelectedPrefecture}
       />
-      {isNotNullOrUndefined(selectedPrefecture) && (
-        <FlowMap
-          flowData={flowData[2000]}
-          points={prefectureCenter}
-          start={selectedPrefecture}
-          projection={projection}
-        />
-      )}
+      <FlowMap
+        flowData={flowOfPeople}
+        points={prefectureCenter}
+        projection={projection}
+      />
     </ZoomableSVG>
   );
 };

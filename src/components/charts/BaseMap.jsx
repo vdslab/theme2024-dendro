@@ -1,6 +1,6 @@
 import { basePrefColor } from "../../styles/style";
 
-export const BaseMap = ({ features, pathGenerator, setSelectedPrefecture }) => {
+export const BaseMap = ({ features, pathGenerator, handleClick }) => {
   return (
     <>
       {features.map((feature) => {
@@ -12,7 +12,7 @@ export const BaseMap = ({ features, pathGenerator, setSelectedPrefecture }) => {
             fill={basePrefColor}
             stroke="#000"
             strokeWidth={0.2}
-            onClick={() => setSelectedPrefecture(prefectureId)}
+            onClick={() => handleClick(prefectureId)}
           />
         );
       })}

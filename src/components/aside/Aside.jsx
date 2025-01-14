@@ -4,7 +4,7 @@ import { Settings } from "./Settings";
 
 export const Aside = () => {
   return (
-    <Box>
+    <Box width="100%" marginX={2}>
       <Settings />
       <Results />
     </Box>

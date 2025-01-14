@@ -1,32 +1,47 @@
+import { useContext } from "react";
 import {
   prefectureCenter,
   prefectureIdToName,
 } from "../../constants/prefecture";
+import { DataContext } from "../../context/DataContext/DataContext";
 import { calcWidth } from "../../features/flowMap/calcWidth";
+import { isNullOrUndefined } from "../../functions/nullOrUndefined";
+import { flowLineColor } from "../../styles/style";
 
-export const FlowMap = ({ flowData, points, start, projection }) => {
-  const [startX, startY] = projection([points[start].x, points[start].y]);
-  const widths = calcWidth(flowData, start);
+export const FlowMap = ({ flowData, points, projection }) => {
+  const { selectedPrefecture, selectedYear, maxValue } =
+    useContext(DataContext);
+  if (
+    isNullOrUndefined(selectedPrefecture) ||
+    isNullOrUndefined(flowData[selectedYear])
+  ) {
+    return null;
+  }
+  const data = flowData[selectedYear];
+  const [startX, startY] = projection([
+    points[selectedPrefecture].x,
+    points[selectedPrefecture].y,
+  ]);
+  const widths = calcWidth(data, selectedPrefecture, maxValue);
   return (
     <g>
       <defs>
         <marker
           id="arrowhead"
-          markerWidth="6"
-          markerHeight="4"
-          refX="5"
-          refY="2"
+          markerWidth="4"
+          markerHeight="3"
+          refX="1"
+          refY="1.5"
           orient="auto"
         >
-          <polygon points="0 0, 6 2, 0 4" fill="gray" />
+          <polygon points="0 0.5, 2 1.5, 0 2.5" fill={flowLineColor} />
         </marker>
       </defs>
       {Object.keys(prefectureIdToName).map((id) => {
         const center = prefectureCenter[id];
         const [cx, cy] = projection([center.x, center.y]);
-        if (id === String(start) || widths[id] === undefined) {
+        if (id === String(selectedPrefecture) || isNullOrUndefined(widths[id]))
           return null;
-        }
         return (
           <line
             key={id}
@@ -34,7 +49,8 @@ export const FlowMap = ({ flowData, points, start, projection }) => {
             y1={startY}
             x2={cx}
             y2={cy}
-            stroke="gray"
+            stroke={flowLineColor}
+            opacity={0.7}
             strokeWidth={widths[id].strokeWidth}
             markerEnd="url(#arrowhead)"
           />
