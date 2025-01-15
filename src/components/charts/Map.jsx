@@ -10,7 +10,8 @@ import { BaseMap } from "./BaseMap";
 import { SelectedPrefecture } from "./SelectedPrefecture";
 
 export const Map = () => {
-  const { flowOfPeople, setSelectedPrefecture } = useContext(DataContext);
+  const { peopleFlowData, setSelectedPrefecture, selectedType } =
+    useContext(DataContext);
   const ZoomableSVGRef = useRef(null);
   const { data: geojson } = useDataFetch("data/prefectures.geojson", {
     revalidateOnFocus: false,
@@ -56,7 +57,7 @@ export const Map = () => {
         pathGenerator={pathGenerator}
       />
       <FlowMap
-        flowData={flowOfPeople}
+        flowData={peopleFlowData[selectedType]}
         points={prefectureCenter}
         projection={projection}
       />

@@ -10,16 +10,25 @@ import { isNotNullOrUndefined } from "../../functions/nullOrUndefined";
 import { BarChart } from "../common/BarChart";
 
 export const Results = () => {
-  const { flowOfPeople, selectedYear, selectedPrefecture, maxValue } =
-    useContext(DataContext);
+  const {
+    peopleFlowData,
+    selectedYear,
+    selectedPrefecture,
+    selectedType,
+    maxValue,
+  } = useContext(DataContext);
 
   const color = d3.scaleOrdinal(d3.schemeCategory10);
+  const selectedData = useMemo(
+    () => peopleFlowData[selectedType],
+    [peopleFlowData, selectedType]
+  );
   const barChartData = useMemo(
     () =>
-      isNotNullOrUndefined(flowOfPeople) &&
+      isNotNullOrUndefined(selectedData) &&
       isNotNullOrUndefined(selectedPrefecture) &&
       isNotNullOrUndefined(selectedYear)
-        ? Object.entries(flowOfPeople[selectedYear][selectedPrefecture])
+        ? Object.entries(selectedData[selectedYear][selectedPrefecture])
             .filter(
               ([key]) =>
                 isInPrefectureId(key) && key !== String(selectedPrefecture)
@@ -27,13 +36,13 @@ export const Results = () => {
             .map(([key, value]) => {
               return {
                 label: prefectureIdToName[key],
-                value,
+                value: Math.floor(value),
                 color: color(key),
               };
             })
             .sort((a, b) => b.value - a.value)
         : [],
-    [color, flowOfPeople, selectedPrefecture, selectedYear]
+    [color, selectedData, selectedPrefecture, selectedYear]
   );
   return (
     <Box>

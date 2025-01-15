@@ -1,26 +1,51 @@
 import { useMemo, useState } from "react";
+import {
+  peopleFlowDataBasePath,
+  peopleFlowDataNameMap,
+} from "../../constants/flowData";
 import { isInPrefectureId } from "../../constants/prefecture";
-import { isNotNullOrUndefined } from "../../functions/nullOrUndefined";
+import {
+  isNotNullOrUndefined,
+  isNullOrUndefined,
+} from "../../functions/nullOrUndefined";
 import { useMultiDataFetch } from "../../hooks/useMultiDataFetch";
 import { DataContext } from "./DataContext";
 
 export const DataContextProvider = ({ children }) => {
   const [selectedPrefecture, setSelectedPrefecture] = useState(null);
   const [selectedYear, setSelectedYear] = useState("2000");
+  const [selectedType, setSelectedType] = useState("total");
 
-  const { data } = useMultiDataFetch(["data/flowOfPeople.json"], {
+  const fetchUrls = Object.values(peopleFlowDataNameMap).map((data) => {
+    return `${peopleFlowDataBasePath}/${data.fileName}.json`;
+  });
+
+  const { data } = useMultiDataFetch(fetchUrls, {
     revalidateOnFocus: false,
   });
 
-  const flowOfPeople = data?.[0];
+  const peopleFlowData = useMemo(() => {
+    if (isNullOrUndefined(data)) return [];
+
+    return Object.values(peopleFlowDataNameMap).reduce((acc, cur, index) => {
+      acc[cur.id] = data[index];
+      return acc;
+    }, {});
+  }, [data]);
+
+  const totalData = useMemo(
+    () => (isNotNullOrUndefined(peopleFlowData) ? peopleFlowData.total : {}),
+    [peopleFlowData]
+  );
+
   const years = useMemo(
-    () => (isNotNullOrUndefined(flowOfPeople) ? Object.keys(flowOfPeople) : []),
-    [flowOfPeople]
+    () => (isNotNullOrUndefined(totalData) ? Object.keys(totalData) : []),
+    [totalData]
   );
   const maxValue = useMemo(() => {
-    if (!isNotNullOrUndefined(flowOfPeople)) return 0;
+    if (!isNotNullOrUndefined(totalData)) return 0;
 
-    const maxValues = Object.values(flowOfPeople).map((v1) => {
+    const maxValues = Object.values(totalData).map((v1) => {
       return Math.max(
         ...Object.entries(v1).map(([key1, v2]) => {
           if (!isInPrefectureId(key1)) return 0;
@@ -35,16 +60,18 @@ export const DataContextProvider = ({ children }) => {
     });
 
     return Math.max(...maxValues);
-  }, [flowOfPeople]);
+  }, [totalData]);
 
   const value = {
-    flowOfPeople,
+    peopleFlowData,
     years,
     maxValue,
     selectedPrefecture,
     setSelectedPrefecture,
     selectedYear,
     setSelectedYear,
+    selectedType,
+    setSelectedType,
   };
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
 };

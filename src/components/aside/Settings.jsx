@@ -1,21 +1,21 @@
-import {
-  Box,
-  MenuItem,
-  Select,
-  ToggleButton,
-  ToggleButtonGroup,
-  Typography,
-} from "@mui/material";
-import { useContext, useState } from "react";
+import { Box, MenuItem, Select, Typography } from "@mui/material";
+import { useContext } from "react";
+import { peopleFlowDataNameMap } from "../../constants/flowData";
 import { prefectureIdToName } from "../../constants/prefecture";
 import { DataContext } from "../../context/DataContext/DataContext";
 import { isNullOrUndefined } from "../../functions/nullOrUndefined";
 
 export const Settings = () => {
-  const { years, selectedYear, setSelectedYear, selectedPrefecture } =
-    useContext(DataContext);
-  const [direction, setDirection] = useState("in");
-  const [flow, setFlow] = useState("material");
+  const {
+    years,
+    selectedYear,
+    setSelectedYear,
+    selectedPrefecture,
+    selectedType,
+    setSelectedType,
+  } = useContext(DataContext);
+  // const [direction, setDirection] = useState("in");
+  // const [flow, setFlow] = useState("material");
   return (
     <Box display="flex" flexDirection="column" gap={1}>
       <Typography variant="h5">Settings</Typography>
@@ -26,6 +26,24 @@ export const Settings = () => {
             ? "未選択"
             : prefectureIdToName[selectedPrefecture]
         }`}</Typography>
+      </Box>
+
+      <Box display="flex" alignItems="center">
+        <Typography variant="h6">移動手段：</Typography>
+        <Select
+          value={selectedType}
+          onChange={(e) => setSelectedType(e.target.value)}
+          sx={{ width: "50%" }}
+          MenuProps={{
+            sx: { maxHeight: 480 },
+          }}
+        >
+          {Object.values(peopleFlowDataNameMap).map((flowData) => (
+            <MenuItem key={flowData.id} value={flowData.id}>
+              {flowData.displayName}
+            </MenuItem>
+          ))}
+        </Select>
       </Box>
 
       <Box display="flex" alignItems="center">
@@ -45,7 +63,7 @@ export const Settings = () => {
           ))}
         </Select>
       </Box>
-      <Box display="flex" alignItems="center">
+      {/* <Box display="flex" alignItems="center">
         <Typography variant="h6">方向：</Typography>
         <ToggleButtonGroup
           value={direction}
@@ -76,7 +94,7 @@ export const Settings = () => {
             人流
           </ToggleButton>
         </ToggleButtonGroup>
-      </Box>
+      </Box> */}
     </Box>
   );
 };

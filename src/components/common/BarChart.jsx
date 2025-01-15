@@ -80,7 +80,7 @@ export const BarChart = ({ data, maxValue, width, height }) => {
                       userSelect: "none",
                     }}
                   >
-                    {item.value}
+                    {item.value.toLocaleString()}
                   </text>
                 </g>
               );
