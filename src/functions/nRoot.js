@@ -1,4 +1,4 @@
-export const sqrtN = (value, n) => {
+export const nRoot = (value, n) => {
   if (value === 0) {
     return 0;
   }

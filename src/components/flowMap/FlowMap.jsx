@@ -1,14 +1,11 @@
 import { useContext } from "react";
-import {
-  prefectureCenter,
-  prefectureIdToName,
-} from "../../constants/prefecture";
+import { prefectureIdToName } from "../../constants/prefecture";
 import { DataContext } from "../../context/DataContext/DataContext";
 import { calcWidth } from "../../features/flowMap/calcWidth";
 import { isNullOrUndefined } from "../../functions/nullOrUndefined";
 import { flowLineColor } from "../../styles/style";
 
-export const FlowMap = ({ flowData, points, projection }) => {
+export const FlowMap = ({ flowData, points, projection, prefectureCenter }) => {
   const { selectedPrefecture, selectedYear, maxValue } =
     useContext(DataContext);
   if (

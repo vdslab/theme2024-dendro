@@ -1,7 +1,7 @@
 import { geoMercator, geoPath } from "d3";
-import { useContext, useRef } from "react";
-import { prefectureCenter } from "../../constants/prefecture";
+import { useContext, useMemo, useRef } from "react";
 import { DataContext } from "../../context/DataContext/DataContext";
+import { calcPrefectureCenter } from "../../features/map/calcPrefectureCenter";
 import { isNotNullOrUndefined } from "../../functions/nullOrUndefined";
 import { useDataFetch } from "../../hooks/useDataFetch";
 import { ZoomableSVG } from "../common";
@@ -17,6 +17,12 @@ export const Map = () => {
     revalidateOnFocus: false,
     suspense: true,
   });
+
+  const prefectureCenter = useMemo(
+    () =>
+      isNotNullOrUndefined(geojson) ? calcPrefectureCenter(geojson) : null,
+    [geojson]
+  );
 
   const width = 900;
   const height = 840;
@@ -60,6 +66,7 @@ export const Map = () => {
         flowData={peopleFlowData[selectedType]}
         points={prefectureCenter}
         projection={projection}
+        prefectureCenter={prefectureCenter}
       />
     </ZoomableSVG>
   );
