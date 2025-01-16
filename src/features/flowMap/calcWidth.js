@@ -1,4 +1,4 @@
-import { nRoot } from "../../functions/nRoot";
+import { nthRoot } from "../../functions/nthRoot";
 
 export const calcWidth = (flowData, start, maxValue) => {
   const lowerLimit = 0.1;
@@ -8,7 +8,8 @@ export const calcWidth = (flowData, start, maxValue) => {
     if (key === 48 || key === String(start)) {
       return acc;
     }
-    const w = (nRoot(value, nhtRoot) / nRoot(maxValue, nhtRoot)) * upperLimit;
+    const w =
+      (nthRoot(value, nhtRoot) / nthRoot(maxValue, nhtRoot)) * upperLimit;
     const obj = {
       strokeWidth: w,
       strokeDasharray: w <= lowerLimit ? lowerLimit : undefined,
