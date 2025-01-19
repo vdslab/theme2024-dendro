@@ -10,13 +10,8 @@ import { isNotNullOrUndefined } from "../../functions/nullOrUndefined";
 import { BarChart } from "../common/BarChart";
 
 export const Results = () => {
-  const {
-    peopleFlowData,
-    selectedYear,
-    selectedPrefecture,
-    selectedType,
-    maxValue,
-  } = useContext(DataContext);
+  const { peopleFlowData, selectedYear, selectedPrefecture, selectedType } =
+    useContext(DataContext);
 
   const color = d3.scaleOrdinal(d3.schemeCategory10);
   const selectedData = useMemo(
@@ -44,6 +39,7 @@ export const Results = () => {
         : [],
     [color, selectedData, selectedPrefecture, selectedYear]
   );
+  const maxValue = useMemo(() => barChartData[0]?.value ?? 0, [barChartData]);
   return (
     <Box>
       <Typography variant="h5">Results</Typography>
