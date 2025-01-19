@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { peopleFlowDataNameMap } from "../../constants/flowData";
 import { prefectureIdToName } from "../../constants/prefecture";
 import { DataContext } from "../../context/DataContext/DataContext";
-import { isNullOrUndefined } from "../../functions/nullOrUndefined";
+import { isNotNullOrUndefined } from "../../functions/nullOrUndefined";
 
 export const Settings = () => {
   const {
@@ -11,6 +11,7 @@ export const Settings = () => {
     selectedYear,
     setSelectedYear,
     selectedPrefecture,
+    setSelectedPrefecture,
     selectedType,
     setSelectedType,
   } = useContext(DataContext);
@@ -20,17 +21,35 @@ export const Settings = () => {
     <Box display="flex" flexDirection="column" gap={1}>
       <Typography variant="h5">Settings</Typography>
 
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Typography variant="h6">{`選択した都道府県: ${
-          isNullOrUndefined(selectedPrefecture)
-            ? "未選択"
-            : prefectureIdToName[selectedPrefecture]
-        }`}</Typography>
+      <Box display="flex" alignItems="center">
+        <Typography variant="body">選択した都道府県:</Typography>
+        <Select
+          size="small"
+          value={
+            isNotNullOrUndefined(selectedPrefecture) ? selectedPrefecture : ""
+          }
+          onChange={(e) => setSelectedPrefecture(Number(e.target.value))}
+          sx={{ width: "50%" }}
+          MenuProps={{
+            sx: { maxHeight: 480 },
+          }}
+          displayEmpty
+          renderValue={(selected) =>
+            selected ? prefectureIdToName[selected] : "未選択"
+          }
+        >
+          {Object.entries(prefectureIdToName).map(([key, value]) => (
+            <MenuItem key={key} value={key}>
+              {value}
+            </MenuItem>
+          ))}
+        </Select>
       </Box>
 
       <Box display="flex" alignItems="center">
-        <Typography variant="h6">移動手段：</Typography>
+        <Typography variant="body">移動手段：</Typography>
         <Select
+          size="small"
           value={selectedType}
           onChange={(e) => setSelectedType(e.target.value)}
           sx={{ width: "50%" }}
@@ -47,8 +66,9 @@ export const Settings = () => {
       </Box>
 
       <Box display="flex" alignItems="center">
-        <Typography variant="h6">選択年：</Typography>
+        <Typography variant="body">選択年：</Typography>
         <Select
+          size="small"
           value={selectedYear}
           onChange={(e) => setSelectedYear(e.target.value)}
           sx={{ width: "50%" }}
@@ -64,7 +84,7 @@ export const Settings = () => {
         </Select>
       </Box>
       {/* <Box display="flex" alignItems="center">
-        <Typography variant="h6">方向：</Typography>
+        <Typography variant="body">方向：</Typography>
         <ToggleButtonGroup
           value={direction}
           onChange={(_, value) => setDirection(value)}
@@ -80,7 +100,7 @@ export const Settings = () => {
         </ToggleButtonGroup>
       </Box>
       <Box display="flex" alignItems="center">
-        <Typography variant="h6">種類：</Typography>
+        <Typography variant="body">種類：</Typography>
         <ToggleButtonGroup
           value={flow}
           onChange={(_, value) => setFlow(value)}

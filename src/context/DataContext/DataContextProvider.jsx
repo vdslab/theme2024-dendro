@@ -3,7 +3,10 @@ import {
   peopleFlowDataBasePath,
   peopleFlowDataNameMap,
 } from "../../constants/flowData";
-import { isInPrefectureId } from "../../constants/prefecture";
+import {
+  isInPrefectureId,
+  prefectureNameToId,
+} from "../../constants/prefecture";
 import {
   isNotNullOrUndefined,
   isNullOrUndefined,
@@ -12,7 +15,9 @@ import { useMultiDataFetch } from "../../hooks/useMultiDataFetch";
 import { DataContext } from "./DataContext";
 
 export const DataContextProvider = ({ children }) => {
-  const [selectedPrefecture, setSelectedPrefecture] = useState(null);
+  const [selectedPrefecture, setSelectedPrefecture] = useState(
+    prefectureNameToId["東京都"]
+  );
   const [selectedYear, setSelectedYear] = useState("2000");
   const [selectedType, setSelectedType] = useState("total");
 

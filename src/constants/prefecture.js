@@ -54,7 +54,7 @@ export const isInPrefectureId = (id) => {
 
 export const prefectureNameToId = Object.entries(prefectureIdToName).reduce(
   (acc, [id, name]) => {
-    acc[name] = id;
+    acc[name] = Number(id);
     return acc;
   },
   {}

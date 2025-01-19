@@ -2,11 +2,8 @@ import { useContext } from "react";
 import { DataContext } from "../../context/DataContext/DataContext";
 import { selectPrefColor } from "../../styles/style";
 
-export const SelectedPrefecture = ({ features, pathGenerator }) => {
-  const { selectedPrefecture, setSelectedPrefecture } = useContext(DataContext);
-  const feature = features.find(
-    (feature) => feature.properties.pref === selectedPrefecture
-  );
+export const SelectedPrefecture = ({ feature, pathGenerator }) => {
+  const { setSelectedPrefecture } = useContext(DataContext);
   return (
     <>
       {feature && (
