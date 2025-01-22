@@ -1,6 +1,16 @@
-import { Box, MenuItem, Select, Typography } from "@mui/material";
+import {
+  Box,
+  MenuItem,
+  Select,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+} from "@mui/material";
 import { useContext } from "react";
-import { peopleFlowDataNameMap } from "../../constants/flowData";
+import {
+  materialFlowDataNameMap,
+  peopleFlowDataNameMap,
+} from "../../constants/flowData";
 import { prefectureIdToName } from "../../constants/prefecture";
 import { DataContext } from "../../context/DataContext/DataContext";
 import { isNotNullOrUndefined } from "../../functions/nullOrUndefined";
@@ -14,9 +24,10 @@ export const Settings = () => {
     setSelectedPrefecture,
     selectedType,
     setSelectedType,
+    selectedDataType,
+    setSelectedDataType,
   } = useContext(DataContext);
   // const [direction, setDirection] = useState("in");
-  // const [flow, setFlow] = useState("material");
   return (
     <Box display="flex" flexDirection="column" gap={1}>
       <Typography variant="h5">Settings</Typography>
@@ -47,7 +58,9 @@ export const Settings = () => {
       </Box>
 
       <Box display="flex" alignItems="center">
-        <Typography variant="body">移動手段：</Typography>
+        <Typography variant="body">
+          {selectedDataType === "people" ? "移動手段：" : "輸送手段："}
+        </Typography>
         <Select
           size="small"
           value={selectedType}
@@ -57,7 +70,11 @@ export const Settings = () => {
             sx: { maxHeight: 480 },
           }}
         >
-          {Object.values(peopleFlowDataNameMap).map((flowData) => (
+          {Object.values(
+            selectedDataType === "people"
+              ? peopleFlowDataNameMap
+              : materialFlowDataNameMap
+          ).map((flowData) => (
             <MenuItem key={flowData.id} value={flowData.id}>
               {flowData.displayName}
             </MenuItem>
@@ -98,12 +115,15 @@ export const Settings = () => {
             出る
           </ToggleButton>
         </ToggleButtonGroup>
-      </Box>
+      </Box> */}
       <Box display="flex" alignItems="center">
         <Typography variant="body">種類：</Typography>
         <ToggleButtonGroup
-          value={flow}
-          onChange={(_, value) => setFlow(value)}
+          value={selectedDataType}
+          onChange={(_, value) => {
+            setSelectedDataType(value);
+            setSelectedType(value === "people" ? "total" : "totalAll");
+          }}
           exclusive
           sx={{ marginLeft: 1 }}
         >
@@ -114,7 +134,7 @@ export const Settings = () => {
             人流
           </ToggleButton>
         </ToggleButtonGroup>
-      </Box> */}
+      </Box>
     </Box>
   );
 };

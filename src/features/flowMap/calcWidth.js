@@ -1,6 +1,11 @@
 import { nthRoot } from "../../functions/nthRoot";
+import { isNullOrUndefined } from "../../functions/nullOrUndefined";
 
 export const calcWidth = (flowData, start, maxValue) => {
+  if (isNullOrUndefined(flowData[start])) {
+    return null;
+  }
+
   const lowerLimit = 0.1;
   const upperLimit = 3;
   const nhtRoot = 2.7;

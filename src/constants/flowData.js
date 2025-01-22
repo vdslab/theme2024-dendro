@@ -1,5 +1,5 @@
 export const peopleFlowDataBasePath = "data/flowData/people";
-export const materialFlowDataBasePath = "data/FlowData/material";
+export const materialFlowDataBasePath = "data/flowData/material";
 
 export const peopleFlowDataNameMap = {
   total: {
@@ -120,9 +120,9 @@ export const materialFlowDataNameMap = {
     fileName: "specialItemsAll",
     displayName: "全機関特殊品数",
   },
-  totalTrain: {
-    id: "totalTrain",
-    fileName: "totalTrain",
+  totalTrains: {
+    id: "totalTrains",
+    fileName: "totalTrains",
     displayName: "鉄道総貨物数",
   },
   agProdTrains: {
