@@ -88,7 +88,8 @@ export const Map = () => {
       {selectedPrefectureSvg}
       {isNotNullOrUndefined(selectedPrefecture) &&
         (selectedDataType === "people"
-          ? isNotNullOrUndefined(
+          ? isNotNullOrUndefined(peopleFlowData[selectedType]) &&
+            isNotNullOrUndefined(
               peopleFlowData[selectedType][selectedYear]
             ) && (
               <FlowMap
@@ -97,7 +98,8 @@ export const Map = () => {
                 prefectureCenter={prefectureCenter}
               />
             )
-          : isNotNullOrUndefined(
+          : isNotNullOrUndefined(materialFlowData[selectedType]) &&
+            isNotNullOrUndefined(
               materialFlowData[selectedType][selectedYear]
             ) && (
               <FlowMap
