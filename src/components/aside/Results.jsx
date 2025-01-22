@@ -8,6 +8,7 @@ import {
 import { DataContext } from "../../context/DataContext/DataContext";
 import { isNotNullOrUndefined } from "../../functions/nullOrUndefined";
 import { BarChart } from "../common/BarChart";
+import { HistoryBackground } from "../historyBackground/HistoryBackground";
 
 export const Results = () => {
   const { peopleFlowData, selectedYear, selectedPrefecture, selectedType } =
@@ -43,6 +44,10 @@ export const Results = () => {
   return (
     <Box>
       <Typography variant="h5">Results</Typography>
+      <Box>
+        <Typography variant="subtitle1">時代背景</Typography>
+        <HistoryBackground year={selectedYear} />
+      </Box>
       <Box>
         <Typography variant="subtitle1">上位10件</Typography>
         <BarChart
