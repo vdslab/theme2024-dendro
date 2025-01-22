@@ -125,49 +125,49 @@ export const materialFlowDataNameMap = {
     fileName: "totalTrain",
     displayName: "鉄道総貨物数",
   },
-  agProdTrain: {
-    id: "agProdTrain",
-    fileName: "agProdTrain",
+  agProdTrains: {
+    id: "agProdTrains",
+    fileName: "agProdTrains",
     displayName: "鉄道農林水産品数",
   },
-  chemicalIndustryProductsTrain: {
-    id: "chemicalIndustryProductsTrain",
-    fileName: "chemicalIndustryProductsTrain",
+  chemicalIndustryProductsTrains: {
+    id: "chemicalIndustryProductsTrains",
+    fileName: "chemicalIndustryProductsTrains",
     displayName: "鉄道化学工業品数",
   },
-  forestProductsTrain: {
-    id: "forestProductsTrain",
-    fileName: "forestProductsTrain",
+  forestProductsTrains: {
+    id: "forestProductsTrains",
+    fileName: "forestProductsTrains",
     displayName: "鉄道林産品数",
   },
-  lightIndustryProductsTrain: {
-    id: "lightIndustryProductsTrain",
-    fileName: "lightIndustryProductsTrain",
+  lightIndustryProductsTrains: {
+    id: "lightIndustryProductsTrains",
+    fileName: "lightIndustryProductsTrains",
     displayName: "鉄道軽工業品数",
   },
-  MandMProductsTrain: {
-    id: "MandMProductsTrain",
-    fileName: "MandMProductsTrain",
+  MandMProductsTrains: {
+    id: "MandMProductsTrains",
+    fileName: "MandMProductsTrains",
     displayName: "鉄道金属機械工業品数",
   },
-  miscellaneousIndustryProductsTrain: {
-    id: "miscellaneousIndustryProductsTrain",
-    fileName: "miscellaneousIndustryProductsTrain",
+  miscellaneousIndustryProductsTrains: {
+    id: "miscellaneousIndustryProductsTrains",
+    fileName: "miscellaneousIndustryProductsTrains",
     displayName: "鉄道雑工業品数",
   },
-  mineralProductsTrain: {
-    id: "mineralProductsTrain",
-    fileName: "mineralProductsTrain",
+  mineralProductsTrains: {
+    id: "mineralProductsTrains",
+    fileName: "mineralProductsTrains",
     displayName: "鉄道鉱工業品数",
   },
-  othersTrain: {
-    id: "othersTrain",
-    fileName: "othersTrain",
+  othersTrains: {
+    id: "othersTrains",
+    fileName: "othersTrains",
     displayName: "鉄道のその他の品数",
   },
-  specialItemsTrain: {
-    id: "specialItemsTrain",
-    fileName: "specialItemsTrain",
+  specialItemsTrains: {
+    id: "specialItemsTrains",
+    fileName: "specialItemsTrains",
     displayName: "鉄道特殊品数",
   },
   totalShips: {
