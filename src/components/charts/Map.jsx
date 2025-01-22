@@ -15,9 +15,12 @@ import { SelectedPrefecture } from "./SelectedPrefecture";
 export const Map = () => {
   const {
     peopleFlowData,
+    materialFlowData,
     selectedPrefecture,
     setSelectedPrefecture,
+    selectedYear,
     selectedType,
+    selectedDataType,
   } = useContext(DataContext);
   const ZoomableSVGRef = useRef(null);
   const { data: geojson } = useDataFetch("data/prefectures.geojson", {
@@ -83,12 +86,26 @@ export const Map = () => {
         handleClick={handleClick}
       />
       {selectedPrefectureSvg}
-      <FlowMap
-        flowData={peopleFlowData[selectedType]}
-        points={prefectureCenter}
-        projection={projection}
-        prefectureCenter={prefectureCenter}
-      />
+      {isNotNullOrUndefined(selectedPrefecture) &&
+        (selectedDataType === "people"
+          ? isNotNullOrUndefined(
+              peopleFlowData[selectedType][selectedYear]
+            ) && (
+              <FlowMap
+                flowData={peopleFlowData[selectedType][selectedYear]}
+                projection={projection}
+                prefectureCenter={prefectureCenter}
+              />
+            )
+          : isNotNullOrUndefined(
+              materialFlowData[selectedType][selectedYear]
+            ) && (
+              <FlowMap
+                flowData={materialFlowData[selectedType][selectedYear]}
+                projection={projection}
+                prefectureCenter={prefectureCenter}
+              />
+            ))}
     </ZoomableSVG>
   );
 };

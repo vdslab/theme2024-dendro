@@ -11,13 +11,22 @@ import { BarChart } from "../common/BarChart";
 import { HistoryBackground } from "../historyBackground/HistoryBackground";
 
 export const Results = () => {
-  const { peopleFlowData, selectedYear, selectedPrefecture, selectedType } =
-    useContext(DataContext);
+  const {
+    peopleFlowData,
+    materialFlowData,
+    selectedYear,
+    selectedPrefecture,
+    selectedType,
+    selectedDataType,
+  } = useContext(DataContext);
 
   const color = d3.scaleOrdinal(d3.schemeCategory10);
   const selectedData = useMemo(
-    () => peopleFlowData[selectedType],
-    [peopleFlowData, selectedType]
+    () =>
+      selectedDataType === "people"
+        ? peopleFlowData[selectedType]
+        : materialFlowData[selectedType],
+    [peopleFlowData, materialFlowData, selectedDataType, selectedType]
   );
   const barChartData = useMemo(
     () =>

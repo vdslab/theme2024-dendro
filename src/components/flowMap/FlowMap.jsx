@@ -1,25 +1,36 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { prefectureIdToName } from "../../constants/prefecture";
 import { DataContext } from "../../context/DataContext/DataContext";
 import { calcWidth } from "../../features/flowMap/calcWidth";
 import { isNullOrUndefined } from "../../functions/nullOrUndefined";
 import { flowLineColor } from "../../styles/style";
 
-export const FlowMap = ({ flowData, points, projection, prefectureCenter }) => {
-  const { selectedPrefecture, selectedYear, maxValue } =
-    useContext(DataContext);
-  if (
-    isNullOrUndefined(selectedPrefecture) ||
-    isNullOrUndefined(flowData[selectedYear])
-  ) {
+export const FlowMap = ({ flowData, projection, prefectureCenter }) => {
+  const {
+    selectedPrefecture,
+    selectedDataType,
+    peopleMaxValue,
+    materialMaxValue,
+  } = useContext(DataContext);
+
+  const [startX, startY] = projection([
+    prefectureCenter[selectedPrefecture].x,
+    prefectureCenter[selectedPrefecture].y,
+  ]);
+  const maxValue = useMemo(
+    () => (selectedDataType === "people" ? peopleMaxValue : materialMaxValue),
+    [peopleMaxValue, materialMaxValue, selectedDataType]
+  );
+
+  const widths = useMemo(
+    () => calcWidth(flowData, selectedPrefecture, maxValue),
+    [flowData, selectedPrefecture, maxValue]
+  );
+
+  if (isNullOrUndefined(widths)) {
     return null;
   }
-  const data = flowData[selectedYear];
-  const [startX, startY] = projection([
-    points[selectedPrefecture].x,
-    points[selectedPrefecture].y,
-  ]);
-  const widths = calcWidth(data, selectedPrefecture, maxValue);
+
   return (
     <g>
       <defs>
