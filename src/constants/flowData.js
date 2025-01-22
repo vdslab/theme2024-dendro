@@ -100,6 +100,11 @@ export const materialFlowDataNameMap = {
     fileName: "MandMProductsAll",
     displayName: "全機関金属機械工業品数",
   },
+  miscellaneousIndustryProductsAll: {
+    id: "miscellaneousIndustryProductsAll",
+    fileName: "miscellaneousIndustryProductsAll",
+    displayName: "全機関雑工業品数",
+  },
   mineralProductsAll: {
     id: "mineralProductsAll",
     fileName: "mineralProductsAll",
@@ -144,6 +149,11 @@ export const materialFlowDataNameMap = {
     id: "MandMProductsTrain",
     fileName: "MandMProductsTrain",
     displayName: "鉄道金属機械工業品数",
+  },
+  miscellaneousIndustryProductsTrain: {
+    id: "miscellaneousIndustryProductsTrain",
+    fileName: "miscellaneousIndustryProductsTrain",
+    displayName: "鉄道雑工業品数",
   },
   mineralProductsTrain: {
     id: "mineralProductsTrain",
@@ -190,6 +200,11 @@ export const materialFlowDataNameMap = {
     fileName: "MandMProductsShips",
     displayName: "海運金属機械工業品数",
   },
+  miscellaneousIndustryProductsShips: {
+    id: "miscellaneousIndustryProductsShips",
+    fileName: "miscellaneousIndustryProductsShips",
+    displayName: "海運雑工業品数",
+  },
   mineralProductsShips: {
     id: "mineralProductsShips",
     fileName: "mineralProductsShips",
@@ -234,6 +249,11 @@ export const materialFlowDataNameMap = {
     id: "MandMProductsCars",
     fileName: "MandMProductsCars",
     displayName: "自動車金属機械工業品数",
+  },
+  miscellaneousIndustryProductsCars: {
+    id: "miscellaneousIndustryProductsCars",
+    fileName: "miscellaneousIndustryProductsCars",
+    displayName: "自動車雑工業品数",
   },
   mineralProductsCars: {
     id: "mineralProductsCars",
