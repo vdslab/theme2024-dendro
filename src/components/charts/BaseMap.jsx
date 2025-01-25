@@ -13,6 +13,7 @@ export const BaseMap = ({ features, pathGenerator, handleClick }) => {
             stroke="#000"
             strokeWidth={0.2}
             onClick={() => handleClick(prefectureId)}
+            style={{ cursor: "pointer" }}
           />
         );
       })}

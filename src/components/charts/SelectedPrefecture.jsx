@@ -13,6 +13,7 @@ export const SelectedPrefecture = ({ feature, pathGenerator }) => {
           stroke="#000"
           strokeWidth={0.5}
           onClick={() => setSelectedPrefecture(null)}
+          style={{ cursor: "pointer" }}
         />
       )}
     </>
