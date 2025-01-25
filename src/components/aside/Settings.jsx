@@ -13,7 +13,10 @@ import {
 } from "../../constants/flowData";
 import { prefectureIdToName } from "../../constants/prefecture";
 import { DataContext } from "../../context/DataContext/DataContext";
-import { isNotNullOrUndefined } from "../../functions/nullOrUndefined";
+import {
+  isNotNullOrUndefined,
+  isNullOrUndefined,
+} from "../../functions/nullOrUndefined";
 import { sum } from "../../functions/sum";
 
 export const Settings = () => {
@@ -251,6 +254,7 @@ export const Settings = () => {
         <ToggleButtonGroup
           value={selectedDataType}
           onChange={(_, value) => {
+            if (isNullOrUndefined(value)) return;
             setSelectedDataType(value);
             setSelectedType(value === "people" ? "total" : "totalAll");
           }}
