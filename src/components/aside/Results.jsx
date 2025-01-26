@@ -50,6 +50,10 @@ export const Results = () => {
     [color, selectedData, selectedPrefecture, selectedYear]
   );
   const maxValue = useMemo(() => barChartData[0]?.value ?? 0, [barChartData]);
+  const unit = useMemo(
+    () => (selectedDataType === "people" ? "千人" : "トン"),
+    [selectedDataType]
+  );
   return (
     <Box>
       <Typography variant="h5">Results</Typography>
@@ -61,9 +65,10 @@ export const Results = () => {
         <Typography variant="subtitle1">上位10件</Typography>
         <BarChart
           data={barChartData}
-          width={500}
+          width={540}
           height={400}
           maxValue={maxValue}
+          unit={unit}
         />
       </Box>
     </Box>
