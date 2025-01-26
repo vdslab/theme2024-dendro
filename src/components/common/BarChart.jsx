@@ -24,7 +24,7 @@ const Scale = ({ xScale }) => {
   );
 };
 
-export const BarChart = ({ data, maxValue, width, height }) => {
+export const BarChart = ({ data, maxValue, width, height, unit }) => {
   const xScale = useMemo(
     () =>
       d3
@@ -34,10 +34,13 @@ export const BarChart = ({ data, maxValue, width, height }) => {
     [width, maxValue]
   );
   return (
-    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+    <svg width={width} height={height} viewBox={`0 0 ${width + 50} ${height}`}>
       {isNotNullOrUndefinedOrEmptyArray(data) && (
         <>
           <Scale xScale={xScale} />
+          <text x={width + 3} y={10} fontSize="12">
+            {unit}
+          </text>
           <g transform="translate(0, 30)">
             {data.slice(0, 15).map((item, index) => {
               const x = labelWidth;

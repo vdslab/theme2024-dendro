@@ -34,6 +34,10 @@ export const Settings = () => {
     setSelectedDataType,
   } = useContext(DataContext);
   // const [direction, setDirection] = useState("in");
+  const unit = useMemo(
+    () => (selectedDataType === "people" ? "千人" : "トン"),
+    [selectedDataType]
+  );
   const prefectureDisplayData = useMemo(() => {
     try {
       if (selectedDataType === "people") {
@@ -165,7 +169,9 @@ export const Settings = () => {
                 {value}
               </Typography>
               <Typography variant="caption">
-                {`総量: ${prefectureDisplayData[key]?.toLocaleString() ?? ""}`}
+                {`総量: ${
+                  prefectureDisplayData[key]?.toLocaleString() ?? ""
+                } ${unit}`}
               </Typography>
             </MenuItem>
           ))}
@@ -202,7 +208,7 @@ export const Settings = () => {
               <Typography variant="caption">
                 {`総量: ${
                   typeDisplayData[flowData.id]?.toLocaleString() ?? ""
-                }`}
+                } ${unit}`}
               </Typography>
             </MenuItem>
           ))}
@@ -227,7 +233,9 @@ export const Settings = () => {
                 {year}
               </Typography>
               <Typography variant="caption">
-                {`総量: ${yearDisplayData[year]?.toLocaleString() ?? ""}`}
+                {`総量: ${
+                  yearDisplayData[year]?.toLocaleString() ?? ""
+                } ${unit}`}
               </Typography>
             </MenuItem>
           ))}
