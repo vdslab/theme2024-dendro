@@ -96,6 +96,7 @@ export const Map = () => {
                 flowData={peopleFlowData[selectedType][selectedYear]}
                 projection={projection}
                 prefectureCenter={prefectureCenter}
+                geojson={geojson}
               />
             )
           : isNotNullOrUndefined(materialFlowData[selectedType]) &&
@@ -106,6 +107,7 @@ export const Map = () => {
                 flowData={materialFlowData[selectedType][selectedYear]}
                 projection={projection}
                 prefectureCenter={prefectureCenter}
+                geojson={geojson}
               />
             ))}
     </ZoomableSVG>
