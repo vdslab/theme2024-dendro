@@ -8,14 +8,16 @@ export const HistoryBackground = ({ year }) => {
 
   return (
     <Box bgcolor="#eee" p={2} borderRadius={1}>
-      {!isLoading &&
-        data[year].map((item, i) => {
-          return (
-            <Typography key={i} variant="body2">
-              ・{item}
-            </Typography>
-          );
-        })}
+      <ul>
+        {!isLoading &&
+          data[year].map((item, i) => {
+            return (
+              <Typography key={i} variant="body2">
+                <li>{item}</li>
+              </Typography>
+            );
+          })}
+      </ul>
     </Box>
   );
 };
