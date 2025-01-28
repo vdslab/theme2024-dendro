@@ -11,9 +11,11 @@ export const HistoryBackground = ({ year }) => {
       {!isLoading &&
         data[year].map((item, i) => {
           return (
-            <Typography key={i} variant="body2">
-              ・{item}
-            </Typography>
+            <ul>
+              <Typography key={i} variant="body2">
+                <li>{item}</li>
+              </Typography>
+            </ul>
           );
         })}
     </Box>
