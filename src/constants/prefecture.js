@@ -59,38 +59,6 @@ export const prefectureNameToId = Object.entries(prefectureIdToName).reduce(
   },
   {}
 );
-export const tokyoJujoMap = {
-    0: { prefectureChildren: [], nodeChildren: [29] },
-    10: { prefectureChildren: [13,14], nodeChildren: [] },
-    9: { prefectureChildren: [19], nodeChildren: [8,7,10] },
-    7: { prefectureChildren: [8, 9,11,12], nodeChildren: [] },
-    8: { prefectureChildren: [10,15], nodeChildren: [6] },
-    6: { prefectureChildren: [], nodeChildren: [5] },
-    5: { prefectureChildren: [7], nodeChildren: [4] },
-    4: { prefectureChildren: [4,6], nodeChildren: [3] },
-    3: { prefectureChildren: [3,5], nodeChildren: [2] },
-    2: { prefectureChildren: [2], nodeChildren: [1] },
-    1: { prefectureChildren: [1], nodeChildren: [] },
-    11: { prefectureChildren: [], nodeChildren: [8] },
-    12: { prefectureChildren: [16,20], nodeChildren: [14] },
-    13: { prefectureChildren: [22,23], nodeChildren: [9,12] },
-    14: { prefectureChildren: [17,18,21], nodeChildren: [] },
-    15: { prefectureChildren: [], nodeChildren: [13] },
-    16: { prefectureChildren: [25,24], nodeChildren: [15,18] },
-    17: { prefectureChildren: [27,30,29], nodeChildren: [16] },
-    18: { prefectureChildren: [26], nodeChildren: [] },
-    19: { prefectureChildren: [], nodeChildren: [17] },
-    20: { prefectureChildren: [28], nodeChildren: [19] },
-    21: { prefectureChildren: [36,37,38, 39], nodeChildren: [] },
-    22: { prefectureChildren: [31,32,33,34], nodeChildren: [20,21] },
-    23: { prefectureChildren: [35], nodeChildren: [22] },
-    24: { prefectureChildren: [], nodeChildren: [23] },
-    25: { prefectureChildren: [40], nodeChildren: [24,26] },
-    26: { prefectureChildren: [41,42], nodeChildren: [] },
-    27: { prefectureChildren: [44], nodeChildren: [25] },
-    28: { prefectureChildren: [43,45,46], nodeChildren: [27] },
-    29: { prefectureChildren: [47], nodeChildren: [28] },
-  };
 
 export const prefectures = Object.values(prefectureIdToName);
 

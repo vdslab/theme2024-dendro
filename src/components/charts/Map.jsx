@@ -87,28 +87,6 @@ export const Map = () => {
         handleClick={handleClick}
       />
       {selectedPrefectureSvg}
-      {/* {isNotNullOrUndefined(selectedPrefecture) &&
-        (selectedDataType === "people"
-          ? isNotNullOrUndefined(peopleFlowData[selectedType]) &&
-            isNotNullOrUndefined(
-              peopleFlowData[selectedType][selectedYear]
-            ) && (
-              <FlowMap
-                flowData={peopleFlowData[selectedType][selectedYear]}
-                projection={projection}
-                prefectureCenter={prefectureCenter}
-              />
-            )
-          : isNotNullOrUndefined(materialFlowData[selectedType]) &&
-            isNotNullOrUndefined(
-              materialFlowData[selectedType][selectedYear]
-            ) && (
-              <FlowMap
-                flowData={materialFlowData[selectedType][selectedYear]}
-                projection={projection}
-                prefectureCenter={prefectureCenter}
-              />
-            ))} */}
       {isNotNullOrUndefined(selectedPrefecture) &&
         (selectedDataType === "people"
           ? isNotNullOrUndefined(peopleFlowData[selectedType]) &&

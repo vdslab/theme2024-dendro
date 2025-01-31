@@ -1,61 +1,95 @@
-import React, { useContext } from "react";
-import {
-  prefectureIntersection,
-  tokyoJujoMap,
-} from "../../constants/prefecture";
+import React, { useContext, useMemo } from "react";
+import { prefectureIntersection } from "../../constants/prefecture";
 import { DataContext } from "../../context/DataContext/DataContext";
-import { flowLineColor } from "../../styles/style";
+import { calcWidth } from "../../features/dendriticFlowMap/calcWidth";
+import { useDataFetch } from "../../hooks/useDataFetch";
 
-export const DendriticFlowMap = ({ projection, prefectureCenter }) => {
-  const { selectedPrefecture } = useContext(DataContext);
+export const DendriticFlowMap = ({
+  flowData,
+  projection,
+  prefectureCenter,
+}) => {
+  const { data: dendriticMapData, isLoading } = useDataFetch(
+    "data/dendriticFlowMapData.json"
+  );
+
+  const {
+    selectedPrefecture,
+    selectedDataType,
+    peopleMaxValue,
+    materialMaxValue,
+  } = useContext(DataContext);
 
   const [startX, startY] = projection([
     prefectureCenter[selectedPrefecture].x,
     prefectureCenter[selectedPrefecture].y,
   ]);
 
-  const dendriticFlowMap = (id) => {
-    const { prefectureChildren, nodeChildren } = tokyoJujoMap[id];
-    const { x: stX, y: stY } =
-      id === 0 ? { x: startX, y: startY } : prefectureIntersection[id - 1];
+  const maxValue = useMemo(
+    () => (selectedDataType === "people" ? peopleMaxValue : materialMaxValue),
+    [peopleMaxValue, materialMaxValue, selectedDataType]
+  );
 
-    return (
-      <React.Fragment key={`fragment-${id}`}>
-        {prefectureChildren.map((childId) => {
-          const [enX, enY] = projection([
-            prefectureCenter[childId].x,
-            prefectureCenter[childId].y,
-          ]);
-          return (
-            <line
-              key={childId}
-              x1={stX}
-              y1={stY}
-              x2={enX}
-              y2={enY}
-              stroke={flowLineColor}
-              markerEnd="url(#arrowhead)"
-            />
-          );
-        })}
-        {nodeChildren.map((childId) => {
-          const { x: enX, y: enY } = prefectureIntersection[childId - 1];
-          return (
-            <React.Fragment key={childId}>
+  const widths = useMemo(
+    () =>
+      !isLoading
+        ? calcWidth(flowData, dendriticMapData, selectedPrefecture, maxValue)
+        : 0,
+    [flowData, maxValue, dendriticMapData, selectedPrefecture, isLoading]
+  );
+
+  const dendriticFlowMap = (id) => {
+    try {
+      const { prefectureChildren, nodeChildren } =
+        dendriticMapData[selectedPrefecture][id];
+      const { x: stX, y: stY } =
+        id === 0 ? { x: startX, y: startY } : prefectureIntersection[id - 1];
+      return (
+        <React.Fragment key={`fragment-${id}`}>
+          {prefectureChildren.map((childId) => {
+            const [enX, enY] = projection([
+              prefectureCenter[childId].x,
+              prefectureCenter[childId].y,
+            ]);
+            const w = widths.prefecture[childId];
+            console.log("pref", childId, w);
+            return (
               <line
                 key={childId}
                 x1={stX}
                 y1={stY}
                 x2={enX}
                 y2={enY}
-                stroke={flowLineColor}
+                stroke="#ff0000"
+                strokeWidth={w}
+                markerEnd="url(#arrowhead)"
               />
-              {dendriticFlowMap(childId)}
-            </React.Fragment>
-          );
-        })}
-      </React.Fragment>
-    );
+            );
+          })}
+          {nodeChildren.map((childId) => {
+            const { x: enX, y: enY } = prefectureIntersection[childId - 1];
+            const w = widths.node[childId];
+            console.log("node", childId, w);
+            return (
+              <React.Fragment key={childId}>
+                <line
+                  key={childId}
+                  x1={stX}
+                  y1={stY}
+                  x2={enX}
+                  y2={enY}
+                  stroke="#ff0000"
+                  strokeWidth={w}
+                />
+                {dendriticFlowMap(childId)}
+              </React.Fragment>
+            );
+          })}
+        </React.Fragment>
+      );
+    } catch {
+      return <></>;
+    }
   };
 
   return (
@@ -69,7 +103,7 @@ export const DendriticFlowMap = ({ projection, prefectureCenter }) => {
           refY="1.5"
           orient="auto"
         >
-          <polygon points="0 0.5, 2 1.5, 0 2.5" fill={flowLineColor} />
+          <polygon points="0 0.5, 2 1.5, 0 2.5" fill="#ff0000" />
         </marker>
       </defs>
       {dendriticFlowMap(0)}
