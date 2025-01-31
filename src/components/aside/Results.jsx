@@ -97,7 +97,6 @@ export const Results = () => {
         .sort((a, b) => b.value - a.value);
     }
   }, [
-    peopleFlowData,
     selectedYear,
     selectedPrefecture,
     color,

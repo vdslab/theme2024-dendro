@@ -1,5 +1,6 @@
 import { geoMercator, geoPath } from "d3";
 import { useContext, useEffect, useMemo, useRef } from "react";
+import { prefectureIntersection } from "../../constants/prefecture";
 import { DataContext } from "../../context/DataContext/DataContext";
 import { calcPrefectureCenter } from "../../features/map/calcPrefectureCenter";
 import {
@@ -8,7 +9,7 @@ import {
 } from "../../functions/nullOrUndefined";
 import { useDataFetch } from "../../hooks/useDataFetch";
 import { ZoomableSVG } from "../common";
-import { FlowMap } from "../flowMap/FlowMap";
+import { DendriticFlowMap } from "../dendriticFlowMap/DendriticFlowMap";
 import { BaseMap } from "./BaseMap";
 import { SelectedPrefecture } from "./SelectedPrefecture";
 
@@ -92,8 +93,10 @@ export const Map = () => {
             isNotNullOrUndefined(
               peopleFlowData[selectedType][selectedYear]
             ) && (
-              <FlowMap
-                flowData={peopleFlowData[selectedType][selectedYear]}
+              <DendriticFlowMap
+                flowData={
+                  peopleFlowData[selectedType][selectedYear][selectedPrefecture]
+                }
                 projection={projection}
                 prefectureCenter={prefectureCenter}
               />
@@ -102,12 +105,37 @@ export const Map = () => {
             isNotNullOrUndefined(
               materialFlowData[selectedType][selectedYear]
             ) && (
-              <FlowMap
-                flowData={materialFlowData[selectedType][selectedYear]}
+              <DendriticFlowMap
+                flowData={
+                  materialFlowData[selectedType][selectedYear][
+                    selectedPrefecture
+                  ]
+                }
                 projection={projection}
                 prefectureCenter={prefectureCenter}
               />
             ))}
+      {Object.entries(prefectureCenter).map(([i, { x, y }]) => {
+        const [newX, newY] = projection([x, y]);
+        return (
+          <g key={i}>
+            <circle cx={newX} cy={newY} r={3} fill="skyblue" />
+            <text x={newX} y={newY + 1} fontSize="6px" textAnchor="middle">
+              {i}
+            </text>
+          </g>
+        );
+      })}
+      {prefectureIntersection.map(({ x, y }, i) => {
+        return (
+          <g key={i}>
+            <circle cx={x} cy={y} r={3} fill="red" />
+            <text x={x} y={y + 1} fontSize="6px" textAnchor="middle">
+              {i + 1}
+            </text>
+          </g>
+        );
+      })}
     </ZoomableSVG>
   );
 };
