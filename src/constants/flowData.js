@@ -271,3 +271,8 @@ export const materialFlowDataNameMap = {
     displayName: "自動車特殊品数",
   },
 };
+
+export const getDisplayName = (key, dataType) =>
+  dataType === "people"
+    ? peopleFlowDataNameMap[key]?.displayName
+    : materialFlowDataNameMap[key]?.displayName;

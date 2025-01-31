@@ -1,6 +1,12 @@
-import { Box, Typography } from "@mui/material";
+import {
+  Box,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+} from "@mui/material";
 import * as d3 from "d3";
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, useState } from "react";
+import { getDisplayName } from "../../constants/flowData";
 import {
   isInPrefectureId,
   prefectureIdToName,
@@ -8,6 +14,7 @@ import {
 import { DataContext } from "../../context/DataContext/DataContext";
 import { isNotNullOrUndefined } from "../../functions/nullOrUndefined";
 import { BarChart } from "../common/BarChart";
+import { PieChart } from "../common/PieChart";
 import { HistoryBackground } from "../historyBackground/HistoryBackground";
 
 export const Results = () => {
@@ -20,14 +27,19 @@ export const Results = () => {
     selectedDataType,
   } = useContext(DataContext);
 
-  const color = d3.scaleOrdinal(d3.schemeCategory10);
-  const selectedData = useMemo(
-    () =>
-      selectedDataType === "people"
+  const color = d3.scaleOrdinal(d3.schemePaired);
+  const { selectedData, description, selectedFlowData } = useMemo(() => {
+    const isPeople = selectedDataType === "people";
+    return {
+      selectedData: isPeople
         ? peopleFlowData[selectedType]
         : materialFlowData[selectedType],
-    [peopleFlowData, materialFlowData, selectedDataType, selectedType]
-  );
+      selectedFlowData: isPeople ? peopleFlowData : materialFlowData,
+      description: isPeople
+        ? "利用している移動機関の割合"
+        : "利用している輸送機関の割合",
+    };
+  }, [peopleFlowData, materialFlowData, selectedDataType, selectedType]);
   const barChartData = useMemo(
     () =>
       isNotNullOrUndefined(selectedData) &&
@@ -49,11 +61,43 @@ export const Results = () => {
         : [],
     [color, selectedData, selectedPrefecture, selectedYear]
   );
+
   const maxValue = useMemo(() => barChartData[0]?.value ?? 0, [barChartData]);
   const unit = useMemo(
     () => (selectedDataType === "people" ? "千人" : "トン"),
     [selectedDataType]
   );
+
+  const pieChartData = useMemo(() => {
+    if (
+      isNotNullOrUndefined(selectedFlowData) &&
+      isNotNullOrUndefined(selectedPrefecture) &&
+      isNotNullOrUndefined(selectedYear)
+    ) {
+      const categories = Object.keys(selectedFlowData).filter(
+        (category) =>
+          !["Total", "total", "All"].some((exclude) =>
+            category.includes(exclude)
+          )
+      );
+
+      return categories.map((category, key) => {
+        const value =
+          selectedFlowData[category]?.[selectedYear]?.["48"]?.[
+            selectedPrefecture
+          ];
+
+        return {
+          label: getDisplayName(category, selectedDataType),
+          value: Math.floor(value),
+          color: color(key),
+        };
+      });
+    }
+  }, [peopleFlowData, selectedYear, selectedPrefecture, color]);
+
+  const [chartType, setChartType] = useState("bar");
+
   return (
     <Box>
       <Typography variant="h5">Results</Typography>
@@ -61,15 +105,44 @@ export const Results = () => {
         <Typography variant="subtitle1">時代背景</Typography>
         <HistoryBackground year={selectedYear} />
       </Box>
+      <Box my={2}>
+        <ToggleButtonGroup
+          value={chartType}
+          exclusive
+          onChange={(_, value) => {
+            if (value) setChartType(value);
+          }}
+          aria-label="チャート表示切り替え"
+        >
+          <ToggleButton value="bar" aria-label="棒グラフ">
+            バーチャート
+          </ToggleButton>
+          <ToggleButton value="pie" aria-label="円グラフ">
+            パイチャート
+          </ToggleButton>
+        </ToggleButtonGroup>
+      </Box>
+
       <Box>
-        <Typography variant="subtitle1">上位10件</Typography>
-        <BarChart
-          data={barChartData}
-          width={540}
-          height={400}
-          maxValue={maxValue}
-          unit={unit}
-        />
+        {chartType === "bar" ? (
+          <BarChart
+            data={barChartData}
+            width={540}
+            height={400}
+            maxValue={maxValue}
+            unit={unit}
+          />
+        ) : (
+          <Box>
+            <Typography variant="subtitle1">{description}</Typography>
+            <PieChart
+              data={pieChartData}
+              width={600}
+              height={400}
+              unit={unit}
+            />
+          </Box>
+        )}
       </Box>
     </Box>
   );
