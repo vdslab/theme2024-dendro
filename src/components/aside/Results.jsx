@@ -81,20 +81,29 @@ export const Results = () => {
           )
       );
 
-      return categories.map((category, key) => {
-        const value =
-          selectedFlowData[category]?.[selectedYear]?.["48"]?.[
-            selectedPrefecture
-          ];
+      return categories
+        .map((category, key) => {
+          const value =
+            selectedFlowData[category]?.[selectedYear]?.["48"]?.[
+              selectedPrefecture
+            ];
 
-        return {
-          label: getDisplayName(category, selectedDataType),
-          value: Math.floor(value),
-          color: color(key),
-        };
-      });
+          return {
+            label: getDisplayName(category, selectedDataType),
+            value: Math.floor(value),
+            color: color(key),
+          };
+        })
+        .sort((a, b) => b.value - a.value);
     }
-  }, [peopleFlowData, selectedYear, selectedPrefecture, color]);
+  }, [
+    peopleFlowData,
+    selectedYear,
+    selectedPrefecture,
+    color,
+    selectedDataType,
+    selectedFlowData,
+  ]);
 
   const [chartType, setChartType] = useState("bar");
 
@@ -125,13 +134,16 @@ export const Results = () => {
 
       <Box>
         {chartType === "bar" ? (
-          <BarChart
-            data={barChartData}
-            width={540}
-            height={400}
-            maxValue={maxValue}
-            unit={unit}
-          />
+          <Box>
+            <Typography variant="subtitle1">上位15県</Typography>
+            <BarChart
+              data={barChartData}
+              width={540}
+              height={400}
+              maxValue={maxValue}
+              unit={unit}
+            />
+          </Box>
         ) : (
           <Box>
             <Typography variant="subtitle1">{description}</Typography>
