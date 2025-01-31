@@ -31,7 +31,7 @@ export const PieChart = ({ data, width, height, threshold = 0.05, unit }) => {
     });
   }
 
-  const legendWidth = 150;
+  const legendWidth = 200;
   const chartSize = Math.min(width - legendWidth - 140, height);
   const radius = chartSize / 2;
   const centerX = radius;

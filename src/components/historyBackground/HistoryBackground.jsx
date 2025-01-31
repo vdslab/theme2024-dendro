@@ -7,7 +7,7 @@ export const HistoryBackground = ({ year }) => {
   });
 
   return (
-    <Box bgcolor="#eee" p={2} borderRadius={1}>
+    <Box bgcolor="#eee" p={0.5} borderRadius={1}>
       <ul>
         {!isLoading &&
           data[year].map((item, i) => {

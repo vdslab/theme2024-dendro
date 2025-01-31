@@ -108,7 +108,7 @@ export const Results = () => {
 
   return (
     <Box>
-      <Typography variant="h5">Results</Typography>
+      <Typography variant="h5">結果</Typography>
       <Box>
         <Typography variant="subtitle1">時代背景</Typography>
         <HistoryBackground year={selectedYear} />
@@ -122,10 +122,10 @@ export const Results = () => {
           }}
           aria-label="チャート表示切り替え"
         >
-          <ToggleButton value="bar" aria-label="棒グラフ">
+          <ToggleButton value="bar" aria-label="棒グラフ" size="small">
             バーチャート
           </ToggleButton>
-          <ToggleButton value="pie" aria-label="円グラフ">
+          <ToggleButton value="pie" aria-label="円グラフ" size="small">
             パイチャート
           </ToggleButton>
         </ToggleButtonGroup>
@@ -148,8 +148,8 @@ export const Results = () => {
             <Typography variant="subtitle1">{description}</Typography>
             <PieChart
               data={pieChartData}
-              width={600}
-              height={400}
+              width={560}
+              height={320}
               unit={unit}
             />
           </Box>

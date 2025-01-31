@@ -144,7 +144,7 @@ export const Settings = () => {
 
   return (
     <Box display="flex" flexDirection="column" gap={1}>
-      <Typography variant="h5">Settings</Typography>
+      <Typography variant="h5">設定</Typography>
 
       <Box display="flex" alignItems="center">
         <Typography variant="body">選択した都道府県:</Typography>
