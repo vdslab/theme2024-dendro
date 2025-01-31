@@ -6,6 +6,7 @@ import {
 } from "@mui/material";
 import * as d3 from "d3";
 import { useContext, useMemo, useState } from "react";
+import { getDisplayName } from "../../constants/flowData";
 import {
   isInPrefectureId,
   prefectureIdToName,
@@ -26,20 +27,19 @@ export const Results = () => {
     selectedDataType,
   } = useContext(DataContext);
 
-  const color = d3.scaleOrdinal(d3.schemeCategory10);
-
-  const { selectedData, description } = useMemo(() => {
+  const color = d3.scaleOrdinal(d3.schemePaired);
+  const { selectedData, description, selectedFlowData } = useMemo(() => {
     const isPeople = selectedDataType === "people";
     return {
       selectedData: isPeople
         ? peopleFlowData[selectedType]
         : materialFlowData[selectedType],
+      selectedFlowData: isPeople ? peopleFlowData : materialFlowData,
       description: isPeople
         ? "利用している移動機関の割合"
         : "利用している輸送機関の割合",
     };
   }, [peopleFlowData, materialFlowData, selectedDataType, selectedType]);
-
   const barChartData = useMemo(
     () =>
       isNotNullOrUndefined(selectedData) &&
@@ -62,34 +62,40 @@ export const Results = () => {
     [color, selectedData, selectedPrefecture, selectedYear]
   );
 
-  const pieChartData = useMemo(() => {
-    if (!selectedData || !selectedYear || !selectedPrefecture) return [];
-
-    const data = selectedData[selectedYear]?.[selectedPrefecture];
-    if (!data) return [];
-
-    // 「全機関利用数」を除いた総利用数
-    const total = Object.entries(data)
-      .filter(([key]) => key !== "全機関利用数")
-      .reduce((sum, [, value]) => sum + value, 0);
-
-    if (total === 0) return [];
-
-    return Object.entries(data)
-      .filter(([key]) => key !== "全機関利用数")
-      .map(([key, value]) => ({
-        label: key,
-        value: (value / total) * 100, // 割合に変換
-        color: color(key),
-      }))
-      .sort((a, b) => b.value - a.value);
-  }, [selectedData, selectedYear, selectedPrefecture, color]);
-
   const maxValue = useMemo(() => barChartData[0]?.value ?? 0, [barChartData]);
   const unit = useMemo(
     () => (selectedDataType === "people" ? "千人" : "トン"),
     [selectedDataType]
   );
+
+  const pieChartData = useMemo(() => {
+    if (
+      isNotNullOrUndefined(selectedFlowData) &&
+      isNotNullOrUndefined(selectedPrefecture) &&
+      isNotNullOrUndefined(selectedYear)
+    ) {
+      const categories = Object.keys(selectedFlowData).filter(
+        (category) =>
+          !["Total", "total", "All"].some((exclude) =>
+            category.includes(exclude)
+          )
+      );
+
+      console.log(categories);
+      return categories.map((category, key) => {
+        const value =
+          selectedFlowData[category]?.[selectedYear]?.["48"]?.[
+            selectedPrefecture
+          ];
+
+        return {
+          label: getDisplayName(category, selectedDataType),
+          value: Math.floor(value),
+          color: color(key),
+        };
+      });
+    }
+  }, [peopleFlowData, selectedYear, selectedPrefecture, color]);
 
   // チャートの表示状態を管理 (BarChart or PieChart)
   const [chartType, setChartType] = useState("bar"); // "bar" または "pie"
@@ -131,7 +137,12 @@ export const Results = () => {
         ) : (
           <Box>
             <Typography variant="subtitle1">{description}</Typography>
-            <PieChart data={barChartData} width={400} height={400} />
+            <PieChart
+              data={pieChartData}
+              width={600}
+              height={400}
+              unit={unit}
+            />
           </Box>
         )}
       </Box>
