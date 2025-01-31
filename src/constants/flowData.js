@@ -272,7 +272,7 @@ export const materialFlowDataNameMap = {
   },
 };
 
-export const getDisplayName = (key, kindOfFlowData) =>
-  kindOfFlowData === "people"
+export const getDisplayName = (key, dataType) =>
+  dataType === "people"
     ? peopleFlowDataNameMap[key]?.displayName
     : materialFlowDataNameMap[key]?.displayName;

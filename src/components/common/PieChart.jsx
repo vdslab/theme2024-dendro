@@ -67,8 +67,8 @@ export const PieChart = ({ data, width, height, threshold = 0.05, unit }) => {
               onMouseEnter={(e) => {
                 if (svgRef.current) {
                   const rect = svgRef.current.getBoundingClientRect();
-                  const tooltipX = e.clientX - rect.left + 10; // SVG内の相対座標
-                  const tooltipY = e.clientY - rect.top + 10; // SVG内の相対座標
+                  const tooltipX = e.clientX - rect.left + 10;
+                  const tooltipY = e.clientY - rect.top + 10;
                   setHoveredLabel(item.label);
                   setTooltip({
                     visible: true,
@@ -111,7 +111,6 @@ export const PieChart = ({ data, width, height, threshold = 0.05, unit }) => {
           );
         })}
 
-        {/* 凡例 */}
         {processedData.map((item, index) => (
           <g
             key={`legend-${index}`}
@@ -128,7 +127,6 @@ export const PieChart = ({ data, width, height, threshold = 0.05, unit }) => {
         ))}
       </svg>
 
-      {/* ツールチップ */}
       {tooltip.visible && (
         <div
           style={{

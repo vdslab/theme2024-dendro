@@ -81,7 +81,6 @@ export const Results = () => {
           )
       );
 
-      console.log(categories);
       return categories.map((category, key) => {
         const value =
           selectedFlowData[category]?.[selectedYear]?.["48"]?.[
@@ -97,8 +96,7 @@ export const Results = () => {
     }
   }, [peopleFlowData, selectedYear, selectedPrefecture, color]);
 
-  // チャートの表示状態を管理 (BarChart or PieChart)
-  const [chartType, setChartType] = useState("bar"); // "bar" または "pie"
+  const [chartType, setChartType] = useState("bar");
 
   return (
     <Box>
