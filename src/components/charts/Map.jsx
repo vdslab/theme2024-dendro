@@ -1,6 +1,5 @@
 import { geoMercator, geoPath } from "d3";
 import { useContext, useEffect, useMemo, useRef } from "react";
-import { prefectureIntersection } from "../../constants/prefecture";
 import { DataContext } from "../../context/DataContext/DataContext";
 import { calcPrefectureCenter } from "../../features/map/calcPrefectureCenter";
 import {
@@ -115,27 +114,6 @@ export const Map = () => {
                 prefectureCenter={prefectureCenter}
               />
             ))}
-      {Object.entries(prefectureCenter).map(([i, { x, y }]) => {
-        const [newX, newY] = projection([x, y]);
-        return (
-          <g key={i}>
-            <circle cx={newX} cy={newY} r={3} fill="skyblue" />
-            <text x={newX} y={newY + 1} fontSize="6px" textAnchor="middle">
-              {i}
-            </text>
-          </g>
-        );
-      })}
-      {prefectureIntersection.map(({ x, y }, i) => {
-        return (
-          <g key={i}>
-            <circle cx={x} cy={y} r={3} fill="red" />
-            <text x={x} y={y + 1} fontSize="6px" textAnchor="middle">
-              {i + 1}
-            </text>
-          </g>
-        );
-      })}
     </ZoomableSVG>
   );
 };
