@@ -34,7 +34,9 @@ export const calcWidth = (
 };
 
 const normalization = (value, maxValue) => {
-  const upperLimit = 5;
-  const root = 5;
+  // 上限値を大きくして、太さの範囲を広げる
+  const upperLimit = 8;
+  // 乗根の値を小さくして（3乗根）、値の差をより明確にする
+  const root = 3;
   return (nthRoot(value, root) / nthRoot(maxValue, root)) * upperLimit;
 };
