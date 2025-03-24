@@ -36,7 +36,14 @@ export const calcWidth = (
 const normalization = (value, maxValue) => {
   // 上限値を大きくして、太さの範囲を広げる
   const upperLimit = 8;
-  // 乗根の値を小さくして（3乗根）、値の差をより明確にする
-  const root = 3;
-  return (nthRoot(value, root) / nthRoot(maxValue, root)) * upperLimit;
+  // 最小の太さを設定（これより細くならない）
+  const minWidth = 1.0;
+  // 乗根の値を小さくして（2.5乗根）、値の差をより明確にする
+  const root = 2.5;
+  
+  // 正規化された値を計算
+  const normalizedWidth = (nthRoot(value, root) / nthRoot(maxValue, root)) * upperLimit;
+  
+  // 最小値との比較で大きい方を返す
+  return Math.max(normalizedWidth, minWidth);
 };
