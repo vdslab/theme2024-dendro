@@ -47,6 +47,7 @@ export const Map = () => {
   const pathGenerator = geoPath().projection(projection);
 
   const handleClick = (prefectureId) => {
+    // 単一選択
     setSelectedPrefecture(prefectureId);
   };
 
@@ -86,6 +87,8 @@ export const Map = () => {
         handleClick={handleClick}
       />
       {selectedPrefectureSvg}
+
+      {/* 単一フロー表示 */}
       {isNotNullOrUndefined(selectedPrefecture) &&
         (selectedDataType === "people"
           ? isNotNullOrUndefined(peopleFlowData[selectedType]) &&
@@ -98,6 +101,7 @@ export const Map = () => {
                 }
                 projection={projection}
                 prefectureCenter={prefectureCenter}
+                geojson={geojson}
               />
             )
           : isNotNullOrUndefined(materialFlowData[selectedType]) &&
@@ -112,8 +116,42 @@ export const Map = () => {
                 }
                 projection={projection}
                 prefectureCenter={prefectureCenter}
+                geojson={geojson}
               />
             ))}
+
+      {/* 機能説明 */}
+      <g transform="translate(20, 780)">
+        <rect
+          x="0"
+          y="0"
+          width="860"
+          height="50"
+          rx="5"
+          ry="5"
+          fill="#f8f9fa"
+          stroke="#dee2e6"
+          strokeWidth="1"
+        />
+        <text
+          x="10"
+          y="20"
+          fill="#212529"
+          fontSize="14"
+          fontFamily="sans-serif"
+        >
+          【機能説明】
+        </text>
+        <text
+          x="10"
+          y="40"
+          fill="#212529"
+          fontSize="12"
+          fontFamily="sans-serif"
+        >
+          ・ウェイポイント機能：フローの経路を制御するための中間点を設定可能
+        </text>
+      </g>
     </ZoomableSVG>
   );
 };

@@ -1,11 +1,11 @@
 import React, { useContext, useMemo } from "react";
 import { prefectureIntersection } from "../../constants/prefecture";
 import { DataContext } from "../../context/DataContext/DataContext";
-import { calcWidth } from "../../features/dendriticFlowMap/calcWidth";
+import { optimizeWidth } from "../../features/dendriticFlowMap/optimizeWidth";
 import {
   calculateFlowColor,
-  createSpiralPath,
-} from "../../features/dendriticFlowMap/spiralTreeLayout";
+  createPath,
+} from "../../features/dendriticFlowMap/pathLayout";
 import { useDataFetch } from "../../hooks/useDataFetch";
 
 export const DendriticFlowMap = ({
@@ -37,21 +37,26 @@ export const DendriticFlowMap = ({
   const widths = useMemo(
     () =>
       !isLoading
-        ? calcWidth(flowData, dendriticMapData, selectedPrefecture, maxValue)
+        ? optimizeWidth(
+            flowData,
+            dendriticMapData,
+            selectedPrefecture,
+            maxValue
+          )
         : 0,
     [flowData, maxValue, dendriticMapData, selectedPrefecture, isLoading]
   );
 
-  // フローの色を決定する関数（spiralTreeLayout.jsから取得）
+  // フローの色を決定する関数（pathLayout.jsから取得）
   const getFlowColor = (width, isEndPoint = false) => {
     return calculateFlowColor(width, selectedDataType, isEndPoint);
   };
 
-  // スパイラルツリーを使用した曲線パスを生成する関数
-  const createCurvedPath = (x1, y1, x2, y2, isNodePath = false) => {
-    // スパイラルツリーレイアウトを使用して曲線を生成
-    // isNodePathはメインブランチかどうかを示す（メインブランチはより直線的に）
-    return createSpiralPath(x1, y1, x2, y2, isNodePath);
+  // 曲線パスを生成する関数
+  const createCurvedPath = (x1, y1, x2, y2, isMainBranch = false) => {
+    // 直線補間を使用して曲線を生成
+    // isMainBranchはメインブランチかどうかを示す（メインブランチはより直線的に）
+    return createPath(x1, y1, x2, y2, isMainBranch);
   };
 
   // 隣接する都道府県かどうかを判断する関数
@@ -99,8 +104,30 @@ export const DendriticFlowMap = ({
 
   const dendriticFlowMap = (id) => {
     try {
+      // データが存在しない場合は空のReact.Fragmentを返す
+      if (
+        !dendriticMapData ||
+        !dendriticMapData[selectedPrefecture] ||
+        !dendriticMapData[selectedPrefecture][id]
+      ) {
+        console.error(
+          `データが見つかりません: selectedPrefecture=${selectedPrefecture}, id=${id}`
+        );
+        return <></>;
+      }
+
       const { prefectureChildren, nodeChildren } =
         dendriticMapData[selectedPrefecture][id];
+
+      // prefectureIntersectionが存在しない場合のチェック
+      if (
+        id !== 0 &&
+        (!prefectureIntersection || !prefectureIntersection[id - 1])
+      ) {
+        console.error(`prefectureIntersection[${id - 1}]が見つかりません`);
+        return <></>;
+      }
+
       const { x: stX, y: stY } =
         id === 0 ? { x: startX, y: startY } : prefectureIntersection[id - 1];
 
@@ -177,7 +204,7 @@ export const DendriticFlowMap = ({
             const w = widths.node[childId];
             console.log("node", childId, w);
 
-            // 曲線パスを取得（ノード間の接続なので isNodePath=true）
+            // パスを取得（ノード間の接続なので isMainBranch=true）
             const { path } = createCurvedPath(stX, stY, enX, enY, true);
             const color = getFlowColor(w);
 

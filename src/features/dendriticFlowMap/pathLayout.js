@@ -1,12 +1,11 @@
 /**
- * スパイラルツリーを使用したフローマップレイアウトの最適化
- * 論文「Flow Map Layout via Spiral Trees」に基づく実装
+ * フローマップレイアウトの最適化
+ * 論文「Flow Map Layout via Spiral Trees」の概念に基づく実装
  * 
  * 実装内容：
- * 1. 対数螺旋（logarithmic spiral）を使用した曲線生成
- *    - 論文の理論的基盤である対数螺旋の特性を正確に反映
- *    - 制限角度αを使用した自然な曲線の生成
- *    - 角度制約γ ≤ αの厳密な実装
+ * 1. 直線補間を使用した曲線生成
+ *    - 視覚的に美しく、理解しやすいパスの生成
+ *    - メインブランチとサブブランチの区別による階層構造の表現
  *    - 終点での接線方向を計算し、矢印の向きを最適化
  * 
  * 2. フローの太さに応じた色計算
@@ -15,21 +14,21 @@
  *    - 終点での色調整による方向性の視覚的強調
  * 
  * 改善点：
- * - 対数螺旋の特性を活かした自然で美しい曲線による視覚的な魅力の向上
+ * - 直線補間による安定した曲線生成
  * - 樹状構造の階層関係の明確化
  * - 視覚的な混乱の軽減と情報伝達の効率化
  */
 
 /**
- * 対数螺旋のパラメータを計算する関数
+ * パスのパラメータを計算する関数
  * @param {number} x1 - 始点のX座標
  * @param {number} y1 - 始点のY座標
  * @param {number} x2 - 終点のX座標
  * @param {number} y2 - 終点のY座標
  * @param {boolean} isMainBranch - メインブランチかどうか
- * @returns {Object} 対数螺旋のパラメータ
+ * @returns {Object} パスのパラメータ
  */
-export const calculateLogarithmicSpiralParams = (x1, y1, x2, y2, isMainBranch = false) => {
+export const calculatePathParams = (x1, y1, x2, y2, isMainBranch = false) => {
   // 2点間の距離と角度を計算
   const dx = x2 - x1;
   const dy = y2 - y1;
@@ -41,15 +40,13 @@ export const calculateLogarithmicSpiralParams = (x1, y1, x2, y2, isMainBranch = 
   const r2 = distance;
   const theta2 = angle;
 
-  // 制限角度α（論文では25°または35°を使用）
+  // 制限角度α
   // メインブランチはより直線的に（小さいα）、サブブランチはより曲線的に（大きいα）
   const alpha = isMainBranch 
     ? (15 * Math.PI / 180) // 15度をラジアンに変換（より直線的に）
     : (25 * Math.PI / 180); // 25度をラジアンに変換
 
-  // 対数螺旋のパラメータを計算
-  // β値は螺旋の角度（-α ≤ β ≤ α）
-  // 論文の制約に従い、βの値を選択する
+  // βパラメータの計算
   // 初期値として、αの一定割合を使用
   let beta = isMainBranch 
     ? (alpha * 0.5) * (Math.random() > 0.5 ? 1 : -1) // メインブランチは小さめのβ値
@@ -60,19 +57,19 @@ export const calculateLogarithmicSpiralParams = (x1, y1, x2, y2, isMainBranch = 
     beta = 0.01 * (beta >= 0 ? 1 : -1);
   }
 
-  // βの絶対値がαを超えないようにする（論文の制約）
+  // βの絶対値がαを超えないようにする
   if (Math.abs(beta) > alpha) {
     beta = alpha * (beta >= 0 ? 1 : -1);
   }
 
-  // 対数螺旋のパラメータを返す
+  // パスのパラメータを返す
   return {
     r1: 0, // 始点は原点なのでr1 = 0
     theta1: 0, // 始点は原点なのでtheta1 = 0
     r2,
     theta2,
     beta,
-    alpha, // 制限角度αも返す
+    alpha,
     x1,
     y1,
     x2,
@@ -81,7 +78,7 @@ export const calculateLogarithmicSpiralParams = (x1, y1, x2, y2, isMainBranch = 
 };
 
 /**
- * 対数螺旋のSVGパスを生成する関数
+ * SVGパスを生成する関数
  * @param {number} x1 - 始点のX座標
  * @param {number} y1 - 始点のY座標
  * @param {number} x2 - 終点のX座標
@@ -89,24 +86,23 @@ export const calculateLogarithmicSpiralParams = (x1, y1, x2, y2, isMainBranch = 
  * @param {boolean} isMainBranch - メインブランチかどうか
  * @returns {Object} パスと終点での接線方向
  */
-export const createSpiralPath = (x1, y1, x2, y2, isMainBranch = false) => {
+export const createPath = (x1, y1, x2, y2, isMainBranch = false) => {
   try {
-    // 対数螺旋のパラメータを計算
-    const params = calculateLogarithmicSpiralParams(x1, y1, x2, y2, isMainBranch);
-    const { beta, alpha, r2, theta2 } = params;
+    // パスのパラメータを計算
+    const params = calculatePathParams(x1, y1, x2, y2, isMainBranch);
+    const { theta2 } = params;
 
-    // 対数螺旋のSVGパスを生成するためのポイント数
+    // SVGパスを生成するためのポイント数
     const numPoints = 50;
     
-    // 対数螺旋のポイントを計算
+    // 直線補間によるポイントの計算
     const points = [];
     
     for (let i = 0; i <= numPoints; i++) {
       const t = i / numPoints;
       
-      // 直線補間（論文の制約を満たすため）
-      // 対数螺旋の代わりに直線を使用
-      const r = r2 * t;
+      // 直線補間
+      const r = params.r2 * t;
       const theta = theta2 * t;
       
       // 極座標からデカルト座標に変換
@@ -120,16 +116,15 @@ export const createSpiralPath = (x1, y1, x2, y2, isMainBranch = false) => {
     const path = `M ${x1} ${y1} L ${points.join(' L ')}`;
     
     // 終点での接線方向を計算（矢印の向きに使用）
-    // 直線の場合、接線方向は単純にtheta2
     const endTangent = (theta2 * 180 / Math.PI) % 360;
 
     return {
       path,
       endTangent,
-      spiralParams: params
+      pathParams: params
     };
   } catch (error) {
-    console.error("Error in createSpiralPath:", error);
+    console.error("Error in createPath:", error);
     
     // エラーが発生した場合は、単純な直線を返す
     const path = `M ${x1} ${y1} L ${x2} ${y2}`;
@@ -139,7 +134,7 @@ export const createSpiralPath = (x1, y1, x2, y2, isMainBranch = false) => {
     return {
       path,
       endTangent,
-      spiralParams: {
+      pathParams: {
         beta: 0,
         r2: Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2),
         theta2: angle
